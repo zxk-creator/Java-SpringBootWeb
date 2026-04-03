@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kunkun.springwebone.mapper.EmployeeMapper">
+    <select id="getRequiredEmployees" resultType="com.kunkun.springwebone.entity.Employee">
+        SELECT * FROM employees
+        <where>
+            <!-- test: 执行if里面的语句，成功后会自动进行字符串拼接 -->
+            <if test="name != null and name != ''">
+                <!-- 推荐写法：用%作为占位符，进行模糊匹配 -->
+                <!-- CONTACT: 字符串连接函数 -->
+                AND name LIKE CONCAT('%', #{name},'%')
+            </if>
+            <if test="gender != null">
+                AND gender = #{gender}
+            </if>
+            <if test="startDate != null">
+                <!-- 这个&这个是转义字符，代表>，greater than -->
+                AND entry_date &gt;=#{startDate}
+            </if>
+            <if test="endDate != null">
+                AND entry_date &lt;=#{endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllEmployees" resultType="com.kunkun.springwebone.entity.Employee">
+        SELECT * FROM employees
+    </select>
+
+    <insert id="insertEmployee" useGeneratedKeys="true" keyProperty="id">
+        <!-- 必须与数据库里面的字符串一一对应！ -->
+        insert into employee (name,username,phone,gender,avatar_url,department,job_title,entry_date,last_update_time)
+        values (#{name}, #{userName}, #{phone}, #{gender}, #{avatarUrl},#{jobTitle},#{department},#{entryDate},#{lastUpdateDate})
+    </insert>
+</mapper>
