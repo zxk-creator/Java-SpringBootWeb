@@ -2,6 +2,7 @@ package com.kunkun.springwebone.enumeration;
 
 import lombok.Getter;
 
+@Deprecated
 @Getter
 public enum Gender {
     Boy(1, "男"),

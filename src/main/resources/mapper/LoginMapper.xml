@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kunkun.springwebone.mapper.UserQueryMapper">
+    <!-- 注册账号 -->
+    <insert id="registerUser" useGeneratedKeys="true" keyProperty="id">
+        insert into users (username,password_hash,role) VALUES (#{userName},#{passwordHash},0);
+    </insert>
+    <!-- 查询用户输入账号是否存在，同时获取密码，密码与Java端进行哈希值对比 -->
+    <select id="findByUsername">
+        select * from users where username = #{userName};
+    </select>
+    <!-- 直接找到所有人的内容 -->
+    <select id="findAll">
+        select * from users;
+    </select>
+</mapper>

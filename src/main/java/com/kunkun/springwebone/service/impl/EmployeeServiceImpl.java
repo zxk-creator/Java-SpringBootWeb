@@ -26,4 +26,26 @@ public class EmployeeServiceImpl implements EmployeeService
     public List<Employee> getRequiredEmployees(EmployeeQuery query) {
         return employeeMapper.getRequiredEmployees(query.getName(),query.getGender(),query.getStartDate(),query.getEndDate());
     }
+
+    @Override
+    public int insertEmployee(Employee employee)
+    {
+        return employeeMapper.insertEmployee(employee);
+    }
+
+    @Override
+    public int deleteById(Integer id)
+    {
+        return employeeMapper.deleteById(id);
+    }
+
+    @Override
+    public int batchDeleteById(List<Integer> ids) {
+        return employeeMapper.batchDeleteById(ids);
+    }
+
+    @Override
+    public int updateEmployee(Employee employee) {
+        return employeeMapper.updateEmployee(employee);
+    }
 }

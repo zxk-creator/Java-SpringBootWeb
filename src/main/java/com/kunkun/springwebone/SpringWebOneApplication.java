@@ -3,6 +3,7 @@ package com.kunkun.springwebone;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @MapperScan("com.kunkun.springwebone.mapper")
@@ -11,5 +12,4 @@ public class SpringWebOneApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringWebOneApplication.class, args);
     }
-
 }

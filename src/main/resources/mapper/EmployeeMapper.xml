@@ -32,7 +32,37 @@
 
     <insert id="insertEmployee" useGeneratedKeys="true" keyProperty="id">
         <!-- 必须与数据库里面的字符串一一对应！ -->
-        insert into employee (name,username,phone,gender,avatar_url,department,job_title,entry_date,last_update_time)
-        values (#{name}, #{userName}, #{phone}, #{gender}, #{avatarUrl},#{jobTitle},#{department},#{entryDate},#{lastUpdateDate})
+        insert into employees (name,username,phone,gender,avatar_url,department,job_title,entry_date,last_update_time)
+        values (#{name}, #{userName}, #{phone}, #{gender}, #{avatarUrl},#{department},#{jobTitle},#{entryDate},#{lastUpdateTime})
     </insert>
+
+    <delete id="deleteById">
+        delete from employees where id = #{id}
+    </delete>
+
+    <delete id="batchDeleteById">
+        delete from employees where id IN
+        <!-- collections是接口里面Param。这个用来遍历列表批量删除 -->
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateEmployee">
+        update employees
+        <set>
+            <!-- 注意逗号，必须加上逗号SQL语句才能生效。防止出现某字段为空，还误加了个逗号的情况 -->
+            <if test="userName != null">username = #{userName},</if>
+            <if test="name != null"> name = #{name},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="jobTitle != null">job_title = #{jobTitle},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <!-- 最后一个字段没逗号 -->
+            last_update_time = now()
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

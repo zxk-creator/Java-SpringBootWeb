@@ -11,4 +11,8 @@ import java.util.List;
 public interface EmployeeService {
     public List<Employee> getAllEmployees();
     public List<Employee> getRequiredEmployees(EmployeeQuery query);
+    public int insertEmployee(Employee employee);
+    public int deleteById(Integer id);
+    public int batchDeleteById(List<Integer> ids);
+    public int updateEmployee(Employee employee);
 }

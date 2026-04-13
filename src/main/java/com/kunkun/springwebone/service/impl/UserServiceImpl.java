@@ -1,39 +1,50 @@
 package com.kunkun.springwebone.service.impl;
 
 import com.kunkun.springwebone.dao.UserDao;
-import com.kunkun.springwebone.dao.impl.UserDaoImpl;
 import com.kunkun.springwebone.entity.User;
 import com.kunkun.springwebone.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao = new UserDaoImpl();
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    @Autowired
+    private UserDao userDao;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
     @Override
     public List<User> findAll() {
-        // 调用Dao获取数据
-        var Lines = userDao.findAll();
+        return userDao.findAll();
+    }
 
-        // 代替了罗嗦的for循环转换成List类型
-        List<User> userList = Lines.stream().map(Line -> {
-            String[] parts = Line.split(",");
-            Integer id = Integer.parseInt(parts[0]);
-            String username = parts[1];
-            String password = parts[2];
-            String name = parts[3];
-            Integer age = Integer.parseInt(parts[4]);
-            LocalDateTime updateTime = LocalDateTime.parse(parts[5], DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    @Override
+    public User findByName(String userName, String passowrd) {
+        System.out.println("开始查找用户，查询数据库");
+        User foundedUser = userDao.findByUsername(userName);
+        if (foundedUser == null) {
+            log.warn("密码不正确。");
+            return null;
+        }
 
-            return new User(id,username,password,name,age,updateTime);
-        }).collect(Collectors.toList());
-        // 或者toList();
+        if (!encoder.matches(passowrd,foundedUser.getPasswordHash())){
+            log.warn("密码错误");
+            return null;
+        }
 
-        return userList;
+        System.out.println("执行完毕，返回");
+
+        return foundedUser;
+    }
+    @Override
+    public Boolean registerUser(String userName, String passowrd) {
+        String encodedPassword = encoder.encode(passowrd);
+
+        return userDao.registerUser(userName,encodedPassword);
     }
 }

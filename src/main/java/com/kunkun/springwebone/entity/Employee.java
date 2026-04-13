@@ -19,8 +19,7 @@ public class Employee {
     private String userName;
     private String name;
     private String phone;
-    @Setter(AccessLevel.NONE)
-    private Gender gender;
+    private Integer gender; // 1:男, 2:女, 其他:未知
     private String avatarUrl;
     // 比如“学工部”
     private String department;
@@ -28,42 +27,20 @@ public class Employee {
     private String jobTitle;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate entryDate;
-    private LocalDate endDate;
-    private LocalDate lastUpdateDate;
+    private LocalDateTime lastUpdateTime;
 
-    public void setGender(Integer gender)
+    public String getGenderString()
     {
-        if (gender == null)
-        {
-            this.gender = Gender.Unknown;
-            return;
-        }
-
-        try
-        {
-            switch (gender) {
-                case 1:
-                    this.gender = Gender.Boy;
-                    break;
-                case 2:
-                    this.gender = Gender.Girl;
-                    break;
-                default:
-                    this.gender = Gender.Unknown;
-                    break;
-            }
-        } catch (Exception e)
-        {
-            this.gender = Gender.Unknown;
-        }
-
-        // 我们随便塞入一个方法，用来赋值当前系统时间，以便传给数据库
-        this.lastUpdateDate = LocalDate.now();
+        return switch (gender) {
+            case 1 -> "男";
+            case 2 -> "女";
+            default -> "未知";
+        };
     }
 
     @Override
     public String toString()
     {
-        return "id: " + id + "，用户名: " + userName + "，姓名: " + name + "，手机号: " + phone + "，职位类型：" + department + "，入职时间：" + entryDate + "，最后操作时间：" + lastUpdateDate;
+        return "id: " + id + "，用户名: " + userName + "，姓名: " + name + "，性别：" + getGenderString() + "，手机号: " + phone + "，职位类型：" + department + "，入职时间：" + entryDate + "，最后操作时间：" + lastUpdateTime;
     }
 }
